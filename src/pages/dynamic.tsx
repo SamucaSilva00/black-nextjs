@@ -1,13 +1,8 @@
-// pages/dynamic.tsx
-
-import { GetServerSideProps, NextPage } from "next"
 import { ReactNode, useEffect, useState } from "react"
 import { Col, Container, Row } from "reactstrap"
+import { GetServerSideProps, NextPage } from "next"
 
-type ApiResponse = {
-    name: string
-    timestamp: Date
-}
+
 
 export const getServerSideProps: GetServerSideProps = async () => {
 	const serverSideData: ApiResponse = await fetch(`${process.env.NEXT_PUBLIC_APIURL}/api/hello`).then(res => res.json())
@@ -19,21 +14,26 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 
+type ApiResponse = {
+    name: string
+    timestamp: Date
+}
+
 const Dynamic: NextPage = (props: {
   children?: ReactNode
   serverSideData?: ApiResponse
 }) => {
-    const [clientSideData, setClientSideData] = useState<ApiResponse>()
+  const [clientSideData, setClientSideData] = useState<ApiResponse>()
 
-    useEffect(() => {
-      fetchData()
-    }, [])
-  
-    const fetchData = async () => {
-      const data = await fetch("/api/hello").then(res => res.json())
-      setClientSideData(data)
-    }
-    
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  const fetchData = async () => {
+    const data = await fetch("/api/hello").then(res => res.json())
+    setClientSideData(data)
+  }
+
   return (
     <Container tag="main">
       <h1 className="my-5">
@@ -43,13 +43,13 @@ const Dynamic: NextPage = (props: {
       <Row>
         <Col>
           <h3>
-            Gerado no servidor: {props.serverSideData?.timestamp}
+            Gerado no servidor: {props.serverSideData?.timestamp.toString()}
           </h3>
         </Col>
 
         <Col>
           <h3>
-            Gerado no cliente: {clientSideData?.timestamp}
+            Gerado no cliente: {clientSideData?.timestamp.toString()}
           </h3>
         </Col>
       </Row>
